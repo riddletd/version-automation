@@ -1,4 +1,4 @@
-# Version Control Automator
+# Version Automator
 
 This program is meant to automate versioning.
 
