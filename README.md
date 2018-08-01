@@ -22,13 +22,10 @@ feature/description-of-feature
 release/description-of-release
 ```
 
-1.  Create or use an existing file, such as package.json, to place the calculated version of your project.
-2.  Enter a unique version tag to identify where you want the calculated verion to be placed.
+1.  Enter a unique version tag into version.py variable at the top fo the code to identify where you want the calculated verion to be placed.
+2.  Place the tag into any file in your project. It would be wise to put it somewhere meaningful like package.json or etc...
 3.  Make sure version.py is executable (chmod +x version.py)
 4.  Run ./version
-5.  Copy and paste the file path of the file you are using into the input.
-6.  Copy and paste your unique version tag identifier into the input.
-7.  Hit enter.
-8.  It should print the version it calculated, and replace your tag with the appropriate value.
+8.  It will search your files for your unique version tag and replace the tag with the appropriate calculated version in every file it finds a tag.
 
 Note: If you ran this as a test inside your project, please change the calculated version back to your unique version tag! If you don't, your project may never launch again... jk. But really, change it back so Jenkins can add the current version during deployment.

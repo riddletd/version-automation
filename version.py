@@ -11,8 +11,7 @@ import subprocess
 major = 0  # release
 minor = 0  # feature
 patch = 0  # hotfix
-filePathToVersionTag = ""
-uniqueVersionTag = ""
+uniqueVersionTag = "UNIQUE_VERSION_IDENTIFIER"
 
 
 def getStdoutFromBashCommand(command):
@@ -30,10 +29,8 @@ def storeInAnArray(searchString):
 def findAllUniqueFilePathsContainingAString(searchString):
     allFilePathsContainingTheSearchString = storeInAnArray(
         searchString)
-    print(allFilePathsContainingTheSearchString)
     temporaryArrayUsedStoreTheFilteredGrepCallFilePathResults = []
     for aSingleFilePath in allFilePathsContainingTheSearchString:
-        print(aSingleFilePath)
         if stringIsInTheFile(searchString, aSingleFilePath) and not stringIsInTheFile("version.py", aSingleFilePath):
             lengthOfFilePathString = aSingleFilePath.find(':')
             temporaryArrayUsedStoreTheFilteredGrepCallFilePathResults += aSingleFilePath[:lengthOfFilePathString].split(
@@ -43,16 +40,6 @@ def findAllUniqueFilePathsContainingAString(searchString):
 
 def stringIsInTheFile(searchString, filePath):
     return searchString in filePath
-
-
-def setCurrentVersion():
-    content = getStdoutFromBashCommand(f'cat {filePathToVersionTag}')
-    print(content)
-    tmp = re.search("[0-9][.][0-9][.][0-9]", content)
-    version = tmp.group(0)
-    major = int(version[0])
-    minor = int(version[2])
-    patch = int(version[4])
 
 
 def setVersion(maj, min, pat):
@@ -66,7 +53,7 @@ def findAndReplace(find, replace):
         find)
     for filePath in aSetOfFilesContainingTheSearchString:
         content = getStdoutFromBashCommand(f'cat {filePath}')
-        replaceCode = content.replace(find, replace)
+        replaceCode = content.replace(find, replace).replace("'", "\'\"\'\"\'")
         os.system(f"echo \'{replaceCode}\' > {filePath}")
 
 
@@ -165,16 +152,17 @@ def calculateVersion():
             major += 1
         else:
             print("Something's wrong...")
-    setVersion(major, minor, patch)
+    #setVersion(major, minor, patch)
 
 
 def main():
     global filePathToVersionTag
     global uniqueVersionTag
 
-    filePathToVersionTag = input("Version Tag File Path: ")
-    uniqueVersionTag = input("Version Tag: ")
     calculateVersion()
+
+    findAndReplace(uniqueVersionTag, f"{major}.{minor}.{patch}")
+
     print("Calculated Version: " + str(major) +
           "." + str(minor) + "." + str(patch))
 
